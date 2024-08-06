@@ -11,7 +11,8 @@ class Florence2Model:
         self.model = AutoModelForCausalLM.from_pretrained(
             model_id, torch_dtype=self.torch_dtype, trust_remote_code=True
         ).to(self.device)
-        self.processor = AutoProcessor.from_pretrained(model_id, trust_remote_code=True)
+        self.processor = AutoProcessor.from_pretrained(model_id,
+                                                        trust_remote_code=True)
 
     def run_example(self, image, task_prompt, text_input=None):
         if text_input is None:
@@ -51,6 +52,12 @@ class Florence2Model:
     def predict(self, image, task_prompt="<OD>", text_input=None):
         results = self.run_example(image, task_prompt, text_input)
         return self.convert_to_od_format(results[task_prompt])
+    
+    def object_detection(self):
+        return NotImplementedError
+
+    def image_captioning(self):
+        return NotImplementedError
 
     def draw_bbox_cv2(self, frame, bboxes, labels, colour=(255, 0, 0)
                       , thickness=2):
